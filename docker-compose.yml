@@ -1,0 +1,101 @@
+services:
+  mongodb:
+    image: mongo:latest
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        mode: non-blocking
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: test
+    ports:
+      - "27017:27017"
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_AUTH_USERNAME=root
+      - ME_CONFIG_MONGODB_AUTH_PASSWORD=example
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+    depends_on:
+      - mongodb
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - 1433:1433
+    environment:
+      SA_PASSWORD: "myStrongPassword!"
+      ACCEPT_EULA: "Y"
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        mode: non-blocking
+    volumes:
+      - ./component-tests/seeds/migratoroffline/script-sql-server/create-database.sql:/home/seeds/create-database.sql
+      - ./component-tests/seeds/migratoroffline/script-sql-server/create-tables.sql:/home/seeds/create-tables.sql
+      - ./component-tests/seeds/migratoroffline/script-sql-server/load-data.sql:/home/seeds/load-data.sql
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - "2181:2181"
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        mode: non-blocking
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOO_MY_ID: 1
+      ZOOKEEPER_SERVER_ID: 1000
+      ZOO_PORT: 2181
+      ZOOKEEPER_SASL_ENABLED: "false"
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        mode: non-blocking
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      ZOOKEEPER_SASL_ENABLED: "false"
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,SASL_PLAINTEXT://localhost:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: SASL_PLAINTEXT
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+    volumes:
+      - ./kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf
+    container_name: kafka
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    depends_on:
+      - kafka
+    ports:
+      - 19000:9000
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        mode: non-blocking
+    environment:
+      KAFKA_BROKERCONNECT: kafka:29092

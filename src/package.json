@@ -1,0 +1,24 @@
+{
+  "name": "component-tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "mock-server": "npx ezmockserver",
+    "component-test": "npx cucumber-js --tags \"not @wip\" --format progress-bar --format message --format html:./cucumber-report.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@cucumber/cucumber": "^7.3.2",
+    "axios": "^0.26.0",
+    "ezmockserver": "^0.11.0",
+    "js-yaml": "^4.1.0",
+    "mongodb": "^4.4.1",
+    "mssql": "^8.0.2",
+    "node-gyp": "^9.0.0",
+    "node-rdkafka": "^2.12.0",
+    "pactum": "^3.1.4"
+  }
+}
