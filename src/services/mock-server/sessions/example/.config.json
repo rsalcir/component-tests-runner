@@ -1,0 +1,12 @@
+{
+    "countMode": "NO_COUNT",
+    "fileType": "content",
+    "logRequest": true,
+    "matchers": [
+      {
+        "name": "example",
+        "method": "^GET$",
+        "url": "/api/example"
+      }
+    ]
+  }

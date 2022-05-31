@@ -1,0 +1,19 @@
+{
+  "api": {
+    "httpPort": 3050
+  },
+  "server": {
+    "httpPort": 3002
+  },
+  "sessionsDirectory": "./sessions/",
+  "defaultSession": {
+    "name": "example"
+  },
+  "defaultMatchers": [
+    {
+      "name": "example",
+      "method": "^GET$",
+      "url": "/api/example"
+    }
+  ]
+}

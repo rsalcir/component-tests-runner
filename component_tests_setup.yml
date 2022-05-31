@@ -1,3 +1,0 @@
-services:
-  mockServer:
-    host: "http://localhost:3030"

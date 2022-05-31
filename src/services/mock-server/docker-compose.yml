@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+  mock-server:
+    image: component-tests/mock-server
+    build: .
+    hostname: mock-server
+    container_name: mock-server
+    ports:
+      - 5030:5030
+      - 3002:3002
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        mode: non-blocking
+

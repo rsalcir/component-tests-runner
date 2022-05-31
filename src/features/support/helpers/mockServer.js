@@ -4,11 +4,11 @@ const path = require('path')
 const { config } = require('../config')
 
 const deleteSessions = async () => {
-    await axios.delete(`${config.mockServer['api-server']}/sessions/current`)
+    await axios.delete(`${config.services.mockServer.host}/sessions/current`)
 }
 
 const addSession = async (sessionName) => {
-    await axios.post(`${config.mockServer['api-server']}/sessions/current`, { name: sessionName.replace(/ /g, '_') }, {headers: {'Content-Type': 'application/json'}})
+    await axios.post(`${config.services.mockServer.host}/sessions/current`, { name: sessionName.replace(/ /g, '_') }, {headers: {'Content-Type': 'application/json'}})
 }
 
 const deleteRequestFiles = (directory) => {

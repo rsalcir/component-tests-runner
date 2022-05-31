@@ -1,6 +1,14 @@
+const yaml = require('js-yaml');
+const fs = require('fs');
 const path = require("path");
-const fs = require("fs");
+let configuration = {}
 
-const settingsPath = path.resolve('./features/config.json');
-const settingsFile = fs.readFileSync(settingsPath);
-module.exports = { config: JSON.parse(settingsFile)}
+try {
+    const settingsPath = path.resolve('../tests_setup.yml');
+    const filePath = fs.readFileSync(settingsPath, 'utf8');
+    configuration = yaml.load(filePath);
+} catch (error) {
+    console.error(error);
+}
+
+module.exports = { config: configuration}

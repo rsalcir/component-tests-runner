@@ -1,0 +1,13 @@
+{
+  "name": "mock-server",
+  "version": "1.0.0",
+  "description": "Mock server to tests",
+  "scripts": {
+    "mock-server": "nohup npx ezmockserver"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ezmockserver": "^0.11.0"
+  }
+}
